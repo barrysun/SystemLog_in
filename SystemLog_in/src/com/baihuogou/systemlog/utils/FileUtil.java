@@ -22,7 +22,7 @@ public class FileUtil {
 		DateFormat df = new SimpleDateFormat("yyyyMMdd");
 		return df.format(date);
 	}
-	private static Calendar getBeforeDay(Calendar cl){  
+	public static Calendar getBeforeDay(Calendar cl){  
 	        int day = cl.get(Calendar.DATE);  
 	        cl.set(Calendar.DATE, day-1);  
 	        return cl;  
