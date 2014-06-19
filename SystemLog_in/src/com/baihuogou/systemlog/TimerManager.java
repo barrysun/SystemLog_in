@@ -26,7 +26,7 @@ public class TimerManager {
        
         Date date=null;
 		try {
-			date = sdf.parse( " 2014-06-19 03:00:00 " );
+			date = sdf.parse( " 2014-06-20 03:00:00 " );
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.TimerTask;
 
+import com.baihuogou.systemlog.mail.SendEmail;
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.FileUtil;
 
@@ -63,6 +64,8 @@ public class NginxLogJob extends TimerTask{
 		create_nginx_table(FileName);
 		nginx_log_in_mysql(String.format(Path, FileName.subSequence(0, 6),FileName),FileName);
 		nginx_log_process(FileName);
+		SendEmail.sendEmail();
+		
 	}
 	
 	

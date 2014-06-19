@@ -42,16 +42,16 @@ public class Db {
 		 
 		 DDL_NGINX_LOG.append(" CREATE TABLE system_nginx_log_%s(");
 		 DDL_NGINX_LOG.append("		 id   SERIAL PRIMARY KEY,");
-		 DDL_NGINX_LOG.append("		 old_str  varchar(5000) ,");
+		 DDL_NGINX_LOG.append("		 old_str  varchar(10000) ,");
 		 DDL_NGINX_LOG.append("		 remote_addr  varchar(16) ,");
 		 DDL_NGINX_LOG.append("		 remote_user  varchar(100),");
 		 DDL_NGINX_LOG.append("		 time_local  varchar(100) ,");
-		 DDL_NGINX_LOG.append("		 request  varchar(5000),");
+		 DDL_NGINX_LOG.append("		 request  varchar(20000),");
 		 DDL_NGINX_LOG.append("		 status  varchar(1000)  ,");
 		 DDL_NGINX_LOG.append("		 body_bytes_set  varchar(1000)  ,");
-		 DDL_NGINX_LOG.append("	 http_referer  varchar(5000) ,");
-		 DDL_NGINX_LOG.append(" http_user_agent  varchar(5000)  ,");
-		 DDL_NGINX_LOG.append("	 http_x_forwarded_for  varchar(1000) ,");
+		 DDL_NGINX_LOG.append("	 http_referer  varchar(10000) ,");
+		 DDL_NGINX_LOG.append(" http_user_agent  varchar(10000)  ,");
+		 DDL_NGINX_LOG.append("	 http_x_forwarded_for  varchar(10000) ,");
 		 DDL_NGINX_LOG.append("	 host  varchar(200) ");
 		 DDL_NGINX_LOG.append(");");
 		
