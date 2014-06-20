@@ -12,7 +12,7 @@ public class TimerManager {
 	//时间间隔
 	private static final long PERIOD_DAY=24 * 60 * 60 * 1000;
 	
-	public TimerManager(String FilePath){
+	public TimerManager(String FilePath,String startDate){
 		Calendar calendar=Calendar.getInstance();
 		//System.out.println(calendar.DATE);
 		/*定制每日3:00执行方法*/
@@ -26,7 +26,7 @@ public class TimerManager {
        
         Date date=null;
 		try {
-			date = sdf.parse( " 2014-06-20 03:00:00 " );
+			date = sdf.parse( String.format(" %s 03:00:00 ",startDate));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

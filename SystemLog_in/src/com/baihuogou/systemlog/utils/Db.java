@@ -25,7 +25,7 @@ public class Db {
 	
 	static{
 		StringBuilder DDL_NGINX_LOG=new StringBuilder(); 
-		PropertiesUtil pro=new PropertiesUtil();
+		PropertiesUtilTest pro=new PropertiesUtilTest();
 		 try {   
 	            InputStream in = pro.getClass().getResourceAsStream(FILE_PATH_NAME);   
 	            Properties props = new Properties();   
@@ -162,7 +162,7 @@ public class Db {
 		return datas;
 	}
 
-	private static void close( Connection conn,  Statement stmt,
+	private static void close(Connection conn,  Statement stmt,
 			 ResultSet rs) {
 		try {
 			if (rs != null) {

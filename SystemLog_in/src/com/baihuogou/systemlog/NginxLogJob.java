@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.TimerTask;
-
 import com.baihuogou.systemlog.mail.SendEmail;
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.FileUtil;
@@ -15,7 +14,6 @@ public class NginxLogJob extends TimerTask{
 
 	private static final char[] ps_chars={'-','[',']','"',' '};
 	private static final String _SHELL="rsync -avRz 192.168.1.228::nginxlog /usr/local/system_log/nginx_log/";
-	
 	private String LogFilePath;
 	
 	public NginxLogJob(String LogFilePath){
@@ -39,7 +37,6 @@ public class NginxLogJob extends TimerTask{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/**
@@ -64,8 +61,7 @@ public class NginxLogJob extends TimerTask{
 		create_nginx_table(FileName);
 		nginx_log_in_mysql(String.format(Path, FileName.subSequence(0, 6),FileName),FileName);
 		nginx_log_process(FileName);
-		SendEmail.sendEmail();
-		
+		SendEmail.sendEmail(FileName);		
 	}
 	
 	
@@ -75,10 +71,8 @@ public class NginxLogJob extends TimerTask{
 		if(pid!=null){
 			pid.waitFor();
 		}
-		
 	}
 
-	
 	public static void nginx_log_in_mysql(final String Path,final String  FileName) throws IOException, ClassNotFoundException, SQLException{
 		 File file = new File(Path);
         BufferedReader br = new BufferedReader(new FileReader(file));
