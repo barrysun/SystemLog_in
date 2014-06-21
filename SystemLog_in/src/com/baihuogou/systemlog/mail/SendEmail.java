@@ -10,7 +10,13 @@ import com.baihuogou.systemlog.utils.Db;
 
 public class SendEmail {
 
-	public static void sendEmail(String FileName) throws ClassNotFoundException, SQLException {
+	public static void sendEmail(String FileName)
+			throws ClassNotFoundException, SQLException {
+		SendProductPV(FileName);
+		SendPvUvEmail(FileName);
+	}
+
+	public static void SendProductPV(String FileName) {
 		// 这个类主要是设置邮件
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setMailServerHost("smtp.163.com");
@@ -33,17 +39,48 @@ public class SendEmail {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
 		mailInfo.setSubject(FileName + " PV统计");
-		String[] emailArray=emails("tongji");
-		if(emailArray!=null){
-			for(String email:emailArray){
+		mailInfo.setToAddress("1096490965@qq.com");
+		// sms.sendTextMail(mailInfo);//发送文体格式
+		SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
+
+		/*
+		 * mailInfo.setSubject(FileName + " PV统计"); String[]
+		 * emailArray=emails("tongji"); if(emailArray!=null){ for(String
+		 * email:emailArray){ mailInfo.setToAddress(email); //
+		 * sms.sendTextMail(mailInfo);//发送文体格式
+		 * SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式 } }
+		 */
+	}
+
+	public static void SendPvUvEmail(String FileName)
+			throws ClassNotFoundException, SQLException {
+		// 这个类主要是设置邮件
+		String[] emailArray = emails("pvuv");
+		String emailContent = NginxPvStatistical
+				.executeUVPVStatistical(FileName);
+		if (emailArray != null) {
+			for (String email : emailArray) {
+				System.out.println(email);
+				MailSenderInfo mailInfo = new MailSenderInfo();
+				mailInfo.setMailServerHost("smtp.163.com");
+				mailInfo.setMailServerPort("25");
+				mailInfo.setValidate(true);
+				mailInfo.setUserName("15882346251@163.com");
+				mailInfo.setPassword("sunwubin");// 您的邮箱密码
+				mailInfo.setFromAddress("15882346251@163.com");
+				mailInfo.setContent(emailContent);
+				mailInfo.setSubject(FileName + " PV UV统计");
+				// sms.sendTextMail(mailInfo);//发送文体格式
+				// SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
+				// mailInfo.setSubject(FileName + " PV统计");
 				mailInfo.setToAddress(email);
 				// sms.sendTextMail(mailInfo);//发送文体格式
 				SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
 			}
 		}
 	}
+
 	/*
 	 * public static void main(String[] args){ sendEmail(); }
 	 */
@@ -54,7 +91,7 @@ public class SendEmail {
 				new Object[] { theme });
 		String[] emailArr = null;
 		if (list != null && list.size() == 1) {
-			emailArr = list.get(0).get("emal_list").toString().split("|");
+			emailArr = list.get(0).get("email_list").toString().split("\\|");
 		}
 		return emailArr;
 	}
