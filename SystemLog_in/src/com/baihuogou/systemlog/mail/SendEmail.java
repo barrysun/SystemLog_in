@@ -95,5 +95,4 @@ public class SendEmail {
 		}
 		return emailArr;
 	}
-
 }

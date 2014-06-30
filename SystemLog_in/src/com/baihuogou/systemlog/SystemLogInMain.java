@@ -30,7 +30,8 @@ public class SystemLogInMain {
 		}
 		
 		String startDate=null,nginxLogPath=null;
-		for(String param=paramArray[i];i>=0;i--,param=paramArray[i]){
+		for(int j=0;j<2;j++){
+			String param=paramArray[j];
 			if(param.startsWith("-StartDate=")){
 				 startDate=param.substring("-StartDate=".length());
 			}else if(param.startsWith("-NginxLogPath=")){
@@ -47,7 +48,8 @@ public class SystemLogInMain {
 		if(startDate==null||startDate.equals("")||isValidDate(startDate)){
 			System.out.println("-StartDate= Malformed！");
 		}
-		nginxLogPath+="\\%s\\access_%s.log";
+		nginxLogPath+="/%s/access_%s.log";
+		System.out.println("nginxLogPath="+nginxLogPath);
 		new TimerManager(nginxLogPath,startDate);
 	}
 	

@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
+
 import com.baihuogou.systemlog.mail.SendEmail;
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.FileUtil;
@@ -73,62 +76,100 @@ public class NginxLogJob extends TimerTask{
 		}
 	}
 
+	/**
+	 * 
+	 * 2014-06-30  Barry.W.Sun 修改成批处理
+	 * 
+	 * @param Path
+	 * @param FileName
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	
 	public static void nginx_log_in_mysql(final String Path,final String  FileName) throws IOException, ClassNotFoundException, SQLException{
 		 File file = new File(Path);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String s = null;
-        while((s = br.readLine())!=null){
-       	 String oldStr=s;
-       	 String remote_addr=null;
-       	 String remote_user=null;
-       	 String time_local=null;
-       	 String request=null;
-       	 String status=null;
-       	 String body_bytes_set=null;
-       	 String http_referer=null;
-       	 String http_user_agent=null;
-       	 String http_x_forwarded_for=null;
-       	 String host=null;
-       	int spindex= oldStr.indexOf(ps_chars[0]);
-       	remote_addr=oldStr.substring(0,spindex);
-       	String lastStr=oldStr.substring(spindex+1);
-       	remote_user=lastStr.substring(0,lastStr.indexOf(ps_chars[1]));
-       	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[1]));
-       	time_local=lastStr.substring(1,lastStr.indexOf(ps_chars[2]));
-       	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[3])+1);
-       	request=lastStr.substring(0,lastStr.indexOf(ps_chars[3]));
-       	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[3])+1).trim();
-       	status=lastStr.substring(0,lastStr.indexOf(ps_chars[4]));
-       	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[4])).trim();
-       	body_bytes_set=lastStr.substring(0,lastStr.indexOf(ps_chars[4]));
-       	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[4])).trim();
-       	String[] arr=lastStr.split("\" \"");
-       	http_referer=arr[0].replace("\"", "").trim();
-       	http_user_agent=arr[1].trim();
-       	http_x_forwarded_for=arr.length>=3?arr[2].trim():"";
-       	host=arr.length>=4?(arr[3].trim().replace("\"", "")):"";
-       	
-       	 Object[] object=new Object[]{
-           	  remote_addr,
-           	  remote_user,
-           	  time_local,
-           	  request,
-           	  status,
-           	  body_bytes_set,
-           	  http_referer,
-           	  http_user_agent,
-           	  http_x_forwarded_for,
-           	  host,
-           	  oldStr
-       	 };	
-            Db.executeUpdate(String.format("insert into system_nginx_log_%s (remote_addr,remote_user,time_local,request,status,body_bytes_set,http_referer,http_user_agent,http_x_forwarded_for,host,old_str) values(?,?,?,?,?,?,?,?,?,?,?)",FileName), object);       
-        }
-        br.close();
+       BufferedReader br = new BufferedReader(new FileReader(file));
+       String s = null;
+       List<Object[]> params=new ArrayList<Object[]>();
+       int BatchCount=1000;
+       int batchRow=1;
+       while((s = br.readLine())!=null){
+        	Object[] object=RequestResolve(s);
+      		params.add(object);
+      		batchRow++;
+      		if(batchRow>=BatchCount)
+      		{
+      			exeInsertParparedSql(FileName,params);
+                batchRow=1;
+      		}
+       }
+       if(params.size()>0){
+    	   exeInsertParparedSql(FileName,params);
+       }
+       br.close();
+	}
+	
+	public static void exeInsertParparedSql(String FileName,List<Object[]> params) throws ClassNotFoundException, SQLException{
+		 Db.executeBatchParparedSql(String.format("insert into system_nginx_log_%s (remote_addr,remote_user,time_local,request,status,body_bytes_set,http_referer,http_user_agent,http_x_forwarded_for,host,old_str,time_time) values(?,?,?,?,?,?,?,?,?,?,?,to_timestamp(rtrim(?,' +0800'),'dd/Mon/yyyy:hh24:MI:SS'))",FileName), params);
 	}
 	
 	public static void create_nginx_table(String FileName) throws ClassNotFoundException, SQLException{
 		Db.executeUpdate(String.format(Db.DDL_NGINX_LOG_CREATE_SQL, FileName));
 	}
+	
+	/**
+	 *  2014-06-30 Barry 解析Nginx log 的request
+	 * @param requestUrl
+	 * @return
+	 */
+	public static Object[] RequestResolve(String requestUrl){
+		String oldStr=requestUrl;
+     	 String remote_addr=null;
+     	 String remote_user=null;
+     	 String time_local=null;
+     	 String request=null;
+     	 String status=null;
+     	 String body_bytes_set=null;
+     	 String http_referer=null;
+     	 String http_user_agent=null;
+     	 String http_x_forwarded_for=null;
+     	 String host=null;
+     	int spindex= oldStr.indexOf(ps_chars[0]);
+     	remote_addr=oldStr.substring(0,spindex);
+     	String lastStr=oldStr.substring(spindex+1);
+     	remote_user=lastStr.substring(0,lastStr.indexOf(ps_chars[1]));
+     	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[1]));
+     	time_local=lastStr.substring(1,lastStr.indexOf(ps_chars[2]));
+     	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[3])+1);
+     	request=lastStr.substring(0,lastStr.indexOf(ps_chars[3]));
+     	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[3])+1).trim();
+     	status=lastStr.substring(0,lastStr.indexOf(ps_chars[4]));
+     	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[4])).trim();
+     	body_bytes_set=lastStr.substring(0,lastStr.indexOf(ps_chars[4]));
+     	lastStr=lastStr.substring(lastStr.indexOf(ps_chars[4])).trim();
+     	String[] arr=lastStr.split("\" \"");
+     	http_referer=arr[0].replace("\"", "").trim();
+     	http_user_agent=arr[1].trim();
+     	http_x_forwarded_for=arr.length>=3?arr[2].trim():"";
+     	host=arr.length>=4?(arr[3].trim().replace("\"", "")):"";
+     	return new Object[]{
+         	  remote_addr,
+         	  remote_user,
+         	  time_local,
+         	  request,
+         	  status,
+         	  body_bytes_set,
+         	  http_referer,
+         	  http_user_agent,
+         	  http_x_forwarded_for,
+         	  host,
+         	  oldStr,
+         	  time_local
+     	 };
+	}
+	
+	
 
 	public static void nginx_log_process(String Time_Str){
 		

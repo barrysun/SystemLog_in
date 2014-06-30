@@ -14,9 +14,8 @@ import com.baihuogou.systemlog.utils.ValueComparator;
 
 
 public class NginxPvStatistical {
-	
 	/**
-	 * 生成统计
+	 * 生成域名统计
 	 * @param time
 	 * @return
 	 * @throws IOException
@@ -66,7 +65,7 @@ public class NginxPvStatistical {
 	}
 	
 	/**
-	 * 
+	 * 统计给定域名的UV
 	 * @param time
 	 * @return
 	 * @throws ClassNotFoundException
@@ -74,10 +73,7 @@ public class NginxPvStatistical {
 	 */
 	public static String executeUVPVStatistical(String time) throws ClassNotFoundException, SQLException{
 		
-		String[] domainArray=new String[]{"www.100hg.com","file.100hg.com","order.100hg.com","cart.100hg.com","i.100hg.com","club.100hg.com",
-				"neijiang.100hg.com","blog.100hg.com","tj.100hg.com","jizhang.100hg.com","openapi.100hg.com","api.100hg.com","chaoshi.100hg.com",
-				"search.100hg.com","m.100hg.com","mm.100hg.com","static.100hg.com","passport.100hg.com","uimg.100hg.com","edu.100hg.com",
-				"zabbix.100hg.com"};
+		String[] domainArray=getDomains();
 		String SQL_PV="select count(remote_addr) as pvcount from system_nginx_log_"+time+" %s";
 		String SQL_UV="select count(distinct(remote_addr)) as uvcount from system_nginx_log_"+time+" %s";
 		Map<String,Integer> domainPVCount=new HashMap<String,Integer>();
@@ -111,6 +107,13 @@ public class NginxPvStatistical {
 //		   fileWriter.flush();
 //		   fileWriter.close();
 		   return stringBuilder.toString();
+	}
+	
+	public static  String[] getDomains(){
+		return new String[]{"www.100hg.com","file.100hg.com","order.100hg.com","cart.100hg.com","i.100hg.com","club.100hg.com",
+				"neijiang.100hg.com","blog.100hg.com","tj.100hg.com","jizhang.100hg.com","openapi.100hg.com","api.100hg.com","chaoshi.100hg.com",
+				"search.100hg.com","m.100hg.com","mm.100hg.com","static.100hg.com","passport.100hg.com","uimg.100hg.com","edu.100hg.com","link.100hg.com",
+				"zabbix.100hg.com"};
 	}
 }
 

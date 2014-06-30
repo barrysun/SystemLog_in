@@ -52,7 +52,8 @@ public class Db {
 		 DDL_NGINX_LOG.append("	 http_referer  varchar(10000) ,");
 		 DDL_NGINX_LOG.append(" http_user_agent  varchar(10000)  ,");
 		 DDL_NGINX_LOG.append("	 http_x_forwarded_for  varchar(10000) ,");
-		 DDL_NGINX_LOG.append("	 host  varchar(200) ");
+		 DDL_NGINX_LOG.append("	 host  varchar(200) , ");
+		 DDL_NGINX_LOG.append("	 time_time timestamp ");
 		 DDL_NGINX_LOG.append(");");
 		
 	/*	DDL_NGINX_LOG.append("CREATE TABLE `system_nginx_log_%s` (");
@@ -122,6 +123,41 @@ public class Db {
 			close(conn, stmt, null);
 		}
 		return result;
+	}
+	
+	/**
+	 * 
+	 * 2014-06-30 Barry.W.Sun 添加 执行批处理
+	 * @param sql
+	 * @param params
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public static void executeBatchParparedSql(String sql,List<Object[]> params) throws ClassNotFoundException, SQLException{
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try {
+			conn = getConn();
+			stmt = conn.prepareStatement(sql);
+			if (params != null) {
+				int i = 0;
+				for (Object[] objs : params) {
+					i=0;
+					for(Object obj:objs){
+					 stmt.setObject(i + 1, obj);
+					 i++;
+					}
+					stmt.addBatch();
+				}
+			}
+		  stmt.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			throw e;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			close(conn, stmt, null);
+		}
 	}
 
 	public static List<HashMap<String, Object>> ExecuteQuery( String sql,
