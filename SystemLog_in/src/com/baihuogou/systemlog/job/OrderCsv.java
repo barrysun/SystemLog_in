@@ -23,9 +23,11 @@ public class OrderCsv {
 	public static void createOrderCsvJob() throws ClassNotFoundException, SQLException, IOException{
 		Connection conn=DbConnection.getConn("ES");
 		List<HashMap<String,Object>> list=Db.ExecuteQuery("select product_id,change_by_user_login_id from order_item  ", null,conn );
+		
 		FileWriter fileWriter=new FileWriter("D:\\order.csv");
 		FileWriter ufileWriter=new FileWriter("D:\\user.csv");
 		FileWriter pfileWriter=new FileWriter("D:\\product.csv");
+		
 		HashMap<String,Integer> map= new HashMap<String,Integer>();
 		HashMap<String,Integer> pMap=new HashMap<String,Integer>();
 		List<HashMap<String,Object>> plist=Db.ExecuteQuery("select distinct(product_id) from order_item order by product_id", null,conn );

@@ -9,12 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
 import com.baihuogou.systemlog.mail.SendEmail;
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.FileUtil;
+import com.baihuogou.systemlog.utils.Log4jUtil;
 
 public class NginxLogJob extends TimerTask{
 
+	Logger logger = Log4jUtil.getLogger(NginxLogJob.class);
 	private static final char[] ps_chars={'-','[',']','"',' '};
 	private static final String _SHELL="rsync -avRz 192.168.1.228::nginxlog /usr/local/system_log/nginx_log/";
 	private String LogFilePath;
@@ -30,15 +34,15 @@ public class NginxLogJob extends TimerTask{
 				System.out.println("nginx_job="+FileUtil.loadFileName());
 				nginx_job(LogFilePath,FileUtil.loadFileName());
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 	

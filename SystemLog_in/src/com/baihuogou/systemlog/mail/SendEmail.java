@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.baihuogou.systemlog.NginxPvStatistical;
 import com.baihuogou.systemlog.utils.Db;
+import com.baihuogou.systemlog.utils.Log4jUtil;
 
 public class SendEmail {
-
+	private static Logger logger = Log4jUtil.getLogger(SendEmail.class);
 	public static void sendEmail(String FileName)
 			throws ClassNotFoundException, SQLException {
 		SendProductPV(FileName);
@@ -36,8 +39,7 @@ public class SendEmail {
 		try {
 			mailInfo.setContent(NginxPvStatistical.executeStatistical(FileName));
 		} catch (ClassNotFoundException | IOException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		mailInfo.setSubject(FileName + " PV统计");
 		mailInfo.setToAddress("1096490965@qq.com");

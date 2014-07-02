@@ -6,9 +6,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 
+import org.apache.log4j.Logger;
+
+import com.baihuogou.systemlog.utils.Log4jUtil;
+
 
 public class TimerManager {
 	
+	private static Logger logger = Log4jUtil.getLogger(TimerManager.class);
 	//时间间隔
 	private static final long PERIOD_DAY=24 * 60 * 60 * 1000;
 	
@@ -19,7 +24,6 @@ public class TimerManager {
 		calendar.set(Calendar.HOUR_OF_DAY, 3);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);*/
-		
 		//Date date=calendar.getTime();//第一次执行定时任务的时间
 		//如果第一次执行定时任务的时间 小于 当前的时间
 		SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
@@ -27,7 +31,8 @@ public class TimerManager {
 		try {
 			date = sdf.parse( String.format(" %s 03:00:00 ",startDate));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			
+			logger.error(e.getMessage());
 		}
 		//此时要在 第一次执行定时任务的时间 加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
 		/* if(date.before(new Date())){

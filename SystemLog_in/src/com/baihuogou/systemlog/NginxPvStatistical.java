@@ -9,11 +9,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.baihuogou.systemlog.utils.Db;
+import com.baihuogou.systemlog.utils.Log4jUtil;
 import com.baihuogou.systemlog.utils.ValueComparator;
 
 
 public class NginxPvStatistical {
+	
+	private static Logger logger = Log4jUtil.getLogger(NginxPvStatistical.class);
 	/**
 	 * 生成域名统计
 	 * @param time
@@ -41,7 +46,7 @@ public class NginxPvStatistical {
 				   domainCount.put(remote_addr,1);
 			   }
 			   }catch(Exception e){
-				   System.out.println(str);
+				   logger.error(str);
 				   continue;
 			   }
 		   // fileWriter.write(String.valueOf(list.get(i).get("remote_addr")).trim()+","+str+","+String.valueOf(list.get(i).get("host")).trim()+"\n");

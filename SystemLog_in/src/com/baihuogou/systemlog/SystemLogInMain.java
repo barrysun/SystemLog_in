@@ -1,16 +1,13 @@
 package com.baihuogou.systemlog;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SystemLogInMain {
 	
-	
-	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+
+	public static void main(String[] args) {
 		parames(args);
 	}
 	
