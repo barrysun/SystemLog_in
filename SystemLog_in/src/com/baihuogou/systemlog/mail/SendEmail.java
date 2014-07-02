@@ -88,7 +88,7 @@ public class SendEmail {
 			SQLException {
 		String sql = "select email_list,email_title from push where theme=?";
 		List<HashMap<String, Object>> list = Db.ExecuteQuery(sql,
-				new Object[] { theme });
+				new Object[] { theme },null);
 		String[] emailArr = null;
 		if (list != null && list.size() == 1) {
 			emailArr = list.get(0).get("email_list").toString().split("\\|");

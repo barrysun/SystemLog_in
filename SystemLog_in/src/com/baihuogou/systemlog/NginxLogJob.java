@@ -92,7 +92,7 @@ public class NginxLogJob extends TimerTask{
        BufferedReader br = new BufferedReader(new FileReader(file));
        String s = null;
        List<Object[]> params=new ArrayList<Object[]>();
-       int BatchCount=1000;
+       int BatchCount=500;
        int batchRow=1;
        while((s = br.readLine())!=null){
         	Object[] object=RequestResolve(s);
@@ -101,6 +101,7 @@ public class NginxLogJob extends TimerTask{
       		if(batchRow>=BatchCount)
       		{
       			exeInsertParparedSql(FileName,params);
+      			params.clear();
                 batchRow=1;
       		}
        }

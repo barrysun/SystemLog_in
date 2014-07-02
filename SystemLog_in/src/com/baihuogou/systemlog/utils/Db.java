@@ -150,7 +150,8 @@ public class Db {
 					stmt.addBatch();
 				}
 			}
-		  stmt.executeUpdate();
+			stmt.executeBatch();
+			stmt.clearBatch();
 		} catch (ClassNotFoundException e) {
 			throw e;
 		} catch (SQLException e) {
@@ -161,11 +162,13 @@ public class Db {
 	}
 
 	public static List<HashMap<String, Object>> ExecuteQuery( String sql,
-			Object[] params) throws ClassNotFoundException, SQLException {
+			Object[] params,Connection conn) throws ClassNotFoundException, SQLException {
 		List<HashMap<String, Object>> datas = null;
 		PreparedStatement sta = null;
 		ResultSet rs = null;
-		Connection conn = getConn();
+		if(conn==null){
+		  conn = getConn();
+		}
 		try {
 			sta = conn.prepareStatement(sql);
 			if (params != null) {
@@ -198,7 +201,7 @@ public class Db {
 		return datas;
 	}
 
-	private static void close(Connection conn,  Statement stmt,
+	public static void close(Connection conn,  Statement stmt,
 			 ResultSet rs) {
 		try {
 			if (rs != null) {

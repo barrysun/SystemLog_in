@@ -23,7 +23,7 @@ public class NginxPvStatistical {
 	 * @throws SQLException
 	 */
 	public static String executeStatistical(String time) throws IOException, ClassNotFoundException, SQLException{
-		List<HashMap<String,Object>> list=Db.ExecuteQuery("select remote_addr,request,host from system_nginx_log_"+time+" where request like '%/product/%' order by host ", null);
+		List<HashMap<String,Object>> list=Db.ExecuteQuery("select remote_addr,request,host from system_nginx_log_"+time+" where request like '%/product/%' order by host ", null,null);
 		//FileWriter fileWriter=new FileWriter("D:\\log20140618.txt");
 		Map<String,Integer> domainCount=new HashMap<String,Integer>();
 		StringBuilder stringBuilder=new StringBuilder();
@@ -81,13 +81,13 @@ public class NginxPvStatistical {
 		StringBuilder domainStringBuilder=new StringBuilder();
 		for(String domain : domainArray){
 			domainStringBuilder.append("'"+domain+"',");
-			domainPVCount.put(domain,Integer.valueOf(Db.ExecuteQuery(String.format(SQL_PV, " where host in ('"+domain+"')"), null).get(0).get("pvcount").toString()));
-			domainUVCount.put(domain, Integer.valueOf(Db.ExecuteQuery(String.format(SQL_UV,  " where host in ('"+domain+"')"), null).get(0).get("uvcount").toString()));
+			domainPVCount.put(domain,Integer.valueOf(Db.ExecuteQuery(String.format(SQL_PV, " where host in ('"+domain+"')"), null,null).get(0).get("pvcount").toString()));
+			domainUVCount.put(domain, Integer.valueOf(Db.ExecuteQuery(String.format(SQL_UV,  " where host in ('"+domain+"')"), null,null).get(0).get("uvcount").toString()));
 		}
 		String domainStr=domainStringBuilder.substring(0, domainStringBuilder.length()-1);
 	
-		domainPVCount.put("Other",Integer.valueOf(Db.ExecuteQuery(String.format(SQL_PV, " where host not in ("+domainStr+")"), null).get(0).get("pvcount").toString()));
-		domainUVCount.put("Other",Integer.valueOf(Db.ExecuteQuery(String.format(SQL_UV, " where host not in ("+domainStr+")"), null).get(0).get("uvcount").toString()));
+		domainPVCount.put("Other",Integer.valueOf(Db.ExecuteQuery(String.format(SQL_PV, " where host not in ("+domainStr+")"), null,null).get(0).get("pvcount").toString()));
+		domainUVCount.put("Other",Integer.valueOf(Db.ExecuteQuery(String.format(SQL_UV, " where host not in ("+domainStr+")"), null,null).get(0).get("uvcount").toString()));
 		//FileWriter fileWriter=new FileWriter("D:\\log20140618.txt");
 		
 		StringBuilder stringBuilder=new StringBuilder();
