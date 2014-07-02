@@ -1,4 +1,4 @@
-package com.baihuogou.systemlog.job;
+package com.baihuogou.diviner;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.DbConnection;
+import com.baihuogou.systemlog.utils.DivinerConstant;
 
 
 public class OrderCsv {
@@ -21,17 +22,16 @@ public class OrderCsv {
 	 * @throws IOException
 	 */
 	public static void createOrderCsvJob() throws ClassNotFoundException, SQLException, IOException{
-		Connection conn=DbConnection.getConn("ES");
-		List<HashMap<String,Object>> list=Db.ExecuteQuery("select product_id,change_by_user_login_id from order_item  ", null,conn );
 		
-		FileWriter fileWriter=new FileWriter("D:\\order.csv");
-		FileWriter ufileWriter=new FileWriter("D:\\user.csv");
-		FileWriter pfileWriter=new FileWriter("D:\\product.csv");
+		List<HashMap<String,Object>> list=Db.ExecuteQuery("select product_id,change_by_user_login_id from order_item  ", null,DbConnection.getConn("ES") );
+		FileWriter fileWriter=new FileWriter(DivinerConstant.ORDERCSV_PATH);
+		FileWriter ufileWriter=new FileWriter(DivinerConstant.USERCSV_PATH);
+		FileWriter pfileWriter=new FileWriter(DivinerConstant.ITEMCSV_PATH);
 		
 		HashMap<String,Integer> map= new HashMap<String,Integer>();
 		HashMap<String,Integer> pMap=new HashMap<String,Integer>();
-		List<HashMap<String,Object>> plist=Db.ExecuteQuery("select distinct(product_id) from order_item order by product_id", null,conn );
-		List<HashMap<String,Object>> ulist=Db.ExecuteQuery("select distinct(change_by_user_login_id) from order_item order by change_by_user_login_id", null,conn);
+		List<HashMap<String,Object>> plist=Db.ExecuteQuery("select distinct(product_id) from order_item order by product_id", null,DbConnection.getConn("ES") );
+		List<HashMap<String,Object>> ulist=Db.ExecuteQuery("select distinct(change_by_user_login_id) from order_item order by change_by_user_login_id", null,DbConnection.getConn("ES"));
 		for(int i=0;i<plist.size();i++){
 			  if(plist.get(i).get("product_id")!=null&&!plist.get(i).get("product_id").toString().equals("")){
 				  pfileWriter.write((i+1)+","+String.valueOf(plist.get(i).get("product_id")).trim()+"\n"); 
@@ -40,8 +40,6 @@ public class OrderCsv {
 		  }
 		pfileWriter.flush();
 		pfileWriter.close();
-		
-		
 		for(int i=0;i<ulist.size();i++){
 			  if(ulist.get(i).get("change_by_user_login_id")!=null&&!ulist.get(i).get("change_by_user_login_id").toString().equals("")){
 				  ufileWriter.write((i+1)+","+String.valueOf(ulist.get(i).get("change_by_user_login_id")).trim()+"\n"); 
@@ -57,7 +55,7 @@ public class OrderCsv {
 		   fileWriter.flush();
 		   fileWriter.close();
 	}
-
+	
 	/**
 	 * 
 	 */

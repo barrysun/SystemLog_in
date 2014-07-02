@@ -168,6 +168,7 @@ public class Db {
 		ResultSet rs = null;
 		if(conn==null){
 		  conn = getConn();
+		  System.out.println("null");
 		}
 		try {
 			sta = conn.prepareStatement(sql);

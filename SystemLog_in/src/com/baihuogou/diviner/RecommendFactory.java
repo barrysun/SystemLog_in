@@ -50,6 +50,8 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
+import com.baihuogou.systemlog.utils.DivinerConstant;
+
 
 public final class RecommendFactory {
 	
@@ -220,9 +222,7 @@ public final class RecommendFactory {
     
     
     public static String showUser(int uid){
-    	
-    	
-    	File file=new File("datafile/user.csv");
+    	File file=new File(DivinerConstant.USERCSV_PATH);
     	HashMap<Integer,String> map=new HashMap<Integer,String>();
     	try {
 			InputStreamReader read = new InputStreamReader(new FileInputStream(file));
@@ -241,7 +241,7 @@ public final class RecommendFactory {
     }
     
     public static String showProduct(int pid){
-    	File file=new File("datafile/product.csv");
+    	File file=new File(DivinerConstant.ITEMCSV_PATH);
     	HashMap<Integer,String> map=new HashMap<Integer,String>();
     	try {
 			InputStreamReader read = new InputStreamReader(new FileInputStream(file));
