@@ -210,14 +210,16 @@ public final class RecommendFactory {
         };
     }
 
-    public static void showItems(long uid, List<RecommendedItem> recommendations, boolean skip) {
+    public static String showItems(long uid, List<RecommendedItem> recommendations, boolean skip) {
+    	StringBuilder str=new StringBuilder();
         if (!skip || recommendations.size() > 0) {
-            System.out.printf("uid:%s,", showUser((int)uid));
+            //System.out.printf("uid:%s,", showUser((int)uid));
             for (RecommendedItem recommendation : recommendations) {
-                System.out.printf("(%s,%f)", showProduct((int)(recommendation.getItemID())), recommendation.getValue());
+            	//{"firstName":"Brett","lastName":"McLaughlin","email":"aaaa"}
+                str.append(String.format("%s,%f|", showProduct((int)(recommendation.getItemID())), recommendation.getValue()));
             }
-            System.out.println();
         }
+        return  str.length()>0?str.substring(0, str.length()-1):str.toString();
     }
     
     

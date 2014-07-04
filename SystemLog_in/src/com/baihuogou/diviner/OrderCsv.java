@@ -2,7 +2,6 @@ package com.baihuogou.diviner;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -56,11 +55,4 @@ public class OrderCsv {
 		   fileWriter.close();
 	}
 	
-	/**
-	 * 
-	 */
-	public static void pushCsvFile(){
-		
-		
-	}
 }

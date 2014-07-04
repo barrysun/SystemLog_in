@@ -25,7 +25,7 @@ public class Db {
 	
 	static{
 		StringBuilder DDL_NGINX_LOG=new StringBuilder(); 
-		PropertiesUtilTest pro=new PropertiesUtilTest();
+		PropertiesUtil pro=new PropertiesUtil();
 		 try {   
 	            InputStream in = pro.getClass().getResourceAsStream(FILE_PATH_NAME);   
 	            Properties props = new Properties();   
@@ -99,13 +99,12 @@ public class Db {
 		return result;
 	}
 
-	public static int executeUpdate( String sql,Object[] params) throws SQLException,
+	public static int executeUpdate( String sql,Object[] params,Connection conn) throws SQLException,
 			ClassNotFoundException {
 		int result = -1;
 		PreparedStatement stmt = null;
-		Connection conn = null;
 		try {
-			conn = getConn();
+			if(conn==null)conn = getConn();
 			stmt = conn.prepareStatement(sql);
 			if (params != null) {
 				int i = 0;
