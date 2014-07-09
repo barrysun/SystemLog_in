@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class EclatRelease {
-
+	
 	private File file=new File("D:/retail.dat");
 	private float limitValue=0.25f;
 	private int transNum=0;

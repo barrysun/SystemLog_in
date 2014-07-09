@@ -35,8 +35,10 @@ public class NginxPvStatistical {
 		stringBuilder.append("<table  border=\"1px\" cellspacing=\"0px\"><tr><td>域名</td><td>点击产品的次数</td><td>访问域名</td></tr>");
 		   for (int i = 0; i < list.size(); i++) {
 			   String str=String.valueOf(list.get(i).get("request"));
+			   
 			   str=str.substring(str.indexOf(" ")+1);
-			   str=str.substring(0,str.indexOf(" "));
+			   //如果字符串被截取
+			   str=str.indexOf(" ")==-1?str:str.substring(0,str.indexOf(" "));
 			   String remote_addr=String.valueOf(list.get(i).get("host")).trim();
 			   try{
 			   str=str.substring(str.lastIndexOf('/')+1,str.indexOf('.'));
@@ -46,6 +48,7 @@ public class NginxPvStatistical {
 				   domainCount.put(remote_addr,1);
 			   }
 			   }catch(Exception e){
+				   System.out.println(list.get(i).get("request"));
 				   logger.error(str);
 				   continue;
 			   }
@@ -67,6 +70,10 @@ public class NginxPvStatistical {
 //		   fileWriter.flush();
 //		   fileWriter.close();
 		   return stringBuilder.toString();
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException{
+		System.out.println( executeStatistical("20140706"));
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import java.util.Timer;
 
 import org.apache.log4j.Logger;
 
+import com.baihuogou.diviner.DivinerTask;
 import com.baihuogou.systemlog.utils.Log4jUtil;
 
 
@@ -16,6 +17,7 @@ public class TimerManager {
 	private static Logger logger = Log4jUtil.getLogger(TimerManager.class);
 	//时间间隔
 	private static final long PERIOD_DAY=24 * 60 * 60 * 1000;
+	//private static final long PERIOD_DAY= 5 * 60 * 1000;
 	
 	public TimerManager(String FilePath,String startDate){
 	/*	Calendar calendar=Calendar.getInstance();
@@ -28,8 +30,10 @@ public class TimerManager {
 		//如果第一次执行定时任务的时间 小于 当前的时间
 		SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
         Date date=null;
+        Date date2=null;
 		try {
 			date = sdf.parse( String.format(" %s 03:00:00 ",startDate));
+			date2 = sdf.parse(String.format(" %s 08:30:00 ",startDate));
 		} catch (ParseException e) {
 			logger.error(e.getMessage());
 		}
@@ -38,9 +42,11 @@ public class TimerManager {
 			 date=this.addDay(date,1);
 		 }*/
 		 Timer timer=new Timer();
+		 Timer timer2=new Timer();
 		 NginxLogJob task = new NginxLogJob(FilePath);
 		 //安排指定的任务在指定的时间开始进行重复的固定延迟执行。
 		 timer.schedule(task,date,PERIOD_DAY);
+		// timer2.schedule(new DivinerTask(), date2,PERIOD_DAY);
 		 // 
 	}
 	 //增加或减少天数

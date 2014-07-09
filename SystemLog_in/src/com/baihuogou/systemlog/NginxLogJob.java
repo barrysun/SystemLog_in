@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -33,7 +34,10 @@ public class NginxLogJob extends TimerTask {
 			System.out.println("nginx_job=" + FileUtil.loadFileName());
 			nginx_job(LogFilePath, FileUtil.loadFileName());
 			logger.debug("NginxLog... ...");
-		} catch (InterruptedException | ClassNotFoundException | SQLException
+			//更新数据库时间
+			FileUtil.UpdateFileName();
+			
+		} catch (InterruptedException | ClassNotFoundException | SQLException |ParseException 
 				| IOException e) {
 			logger.error(e.getMessage());
 		}
