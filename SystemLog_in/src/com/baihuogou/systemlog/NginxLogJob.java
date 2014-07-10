@@ -5,44 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
 import com.baihuogou.systemlog.mail.SendEmail;
 import com.baihuogou.systemlog.utils.Db;
-import com.baihuogou.systemlog.utils.FileUtil;
 import com.baihuogou.systemlog.utils.Log4jUtil;
 
-public class NginxLogJob extends TimerTask {
+public class NginxLogJob  {
 
 	Logger logger = Log4jUtil.getLogger(NginxLogJob.class);
 	private static final char[] ps_chars = { '-', '[', ']', '"', ' ' };
 	private static final String _SHELL = "rsync -avRz 192.168.1.228::nginxlog /usr/local/system_log/nginx_log/";
-	private String LogFilePath;
-
-	public NginxLogJob(String LogFilePath) {
-		this.LogFilePath = LogFilePath;
-	}
-
-	@Override
-	public void run() {
-		try {
-			System.out.println("nginx_job=" + FileUtil.loadFileName());
-			nginx_job(LogFilePath, FileUtil.loadFileName());
-			logger.debug("NginxLog... ...");
-			//更新数据库时间
-			FileUtil.UpdateFileName();
-			
-		} catch (InterruptedException | ClassNotFoundException | SQLException |ParseException 
-				| IOException e) {
-			logger.error(e.getMessage());
-		}
-
-	}
 
 	/**
 	 * 1.同步rsync log文件 1.1验证是否存在log文件。 2.创建对呀的数据表 3.将log文件数据导入到DB中 4.解析日志
@@ -55,7 +31,7 @@ public class NginxLogJob extends TimerTask {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public void nginx_job(String Path, String FileName)
+	public static void nginx_job(String Path, String FileName)
 			throws ClassNotFoundException, SQLException, IOException,
 			InterruptedException {
 		// String FileName="20140601";//FileUtil.loadFileName();

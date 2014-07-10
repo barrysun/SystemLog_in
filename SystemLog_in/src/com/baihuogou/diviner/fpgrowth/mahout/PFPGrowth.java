@@ -3,6 +3,7 @@ package com.baihuogou.diviner.fpgrowth.mahout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.util.HashSet; 
 import java.util.Set;
 import java.util.List;
@@ -23,21 +24,35 @@ import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.iterator.FileLineIterable;
 import org.apache.mahout.common.iterator.StringRecordIterator;
 
+import com.baihuogou.diviner.OrderCsv;
+import com.baihuogou.diviner.RecommendFactory;
+import com.baihuogou.systemlog.utils.Db;
+import com.baihuogou.systemlog.utils.DbConnection;
+import com.baihuogou.systemlog.utils.DivinerConstant;
+
 
 @SuppressWarnings({ "deprecation", "unused" })
 public class PFPGrowth {
- 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void main(String[] args) throws IOException { 
-        
-        Set<String> features = new HashSet<String>();
-        String input = "/data/pfp.cvs";
-        int minSupport = 3;
+
+	public static void action(){
+		try {
+			OrderCsv.createPFPCsv();
+			HdfsFile.uploadFile(DivinerConstant.PFPCSV_PATH,"/data/pfp.csv");
+			runPFP();
+		} catch (ClassNotFoundException | SQLException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void runPFP()  throws IOException, ClassNotFoundException, SQLException{
+		Set<String> features = new HashSet<String>();
+        String input = "/data/pfp.csv";
+        int minSupport = 2;
         int maxHeapSize = 100;//top-k
         String pattern = " \"[ ,\\t]*[,|\\t][ ,\\t]*\" ";        
         Charset encoding = Charset.forName("UTF-8");
         FPGrowth<String> fp = new FPGrowth<String>();
-        String output = "/data/output.cvs";
+        String output = "/data/output.csv";
         Path path = new Path(output);
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
@@ -54,13 +69,19 @@ public class PFPGrowth {
                 new ContextStatusUpdater(null));
         writer.close();
         List<Pair<String,TopKStringPatterns>> frequentPatterns = FPGrowth.readFrequentPattern( conf, path);
-        int i=0;
+        Db.executeUpdate("delete from recommendrpfp ", null, DbConnection.getConn("RE"));
         for (Pair<String,TopKStringPatterns> entry : frequentPatterns) {
-           System.out.print(entry.getFirst()+"-"); // the frequent patterns meet minSupport
-            System.out.println(entry.getSecond()); // the frequent patterns meet minSupport and support
-            System.out.println(i++);
+           String weights=entry.getFirst().trim().replaceAll(" ", "|");
+           String related_child=entry.getSecond().toString().split(",")[1].replaceAll("\\)", "");
+           Db.executeUpdate(
+					"insert into recommendrpfp (weights,related_child) values(?,?)",
+					new Object[] {weights,related_child },
+					DbConnection.getConn("RE"));
         }
-        System.out.print("\nthe end! ");
+	}
+    
+	public static void main(String[] args) { 
+		action();
     }
 
 }

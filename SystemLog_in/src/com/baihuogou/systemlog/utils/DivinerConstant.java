@@ -5,5 +5,7 @@ public class DivinerConstant {
 	public static  String USERCSV_PATH="D:/user.csv";
 	public static  String ITEMCSV_PATH="D:/product.csv";
 	public static  String ORDERCSV_PATH="D:/order.csv";
+	
+	public static String PFPCSV_PATH="D:/pfp.csv";
 
 }

@@ -11,7 +11,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 public class HdfsFile {
 	
-	
 	public static void createFile(String dst,byte[] contents) throws IOException{
 		Configuration conf=new Configuration();
 		FileSystem fs=FileSystem.get(conf);
@@ -26,9 +25,6 @@ public class HdfsFile {
 	//上传本地文件
 	public static void uploadFile(String src,String dst) throws IOException{
 		Configuration conf=new Configuration();
-/*		 conf.set("fs.default.name", "hdfs://192.168.1.201:9000");
-	        conf.set("hadoop.job.user", "root");
-	        conf.set("mapred.job.tracker", "192.168.1.201:9001");*/
 		FileSystem fs=FileSystem.get(conf);
 		Path srcPath=new Path(src);
 		Path dstPath=new Path(dst);
@@ -60,13 +56,11 @@ public class HdfsFile {
             hdfs.mkdirs(dst);            
         } catch (IOException e) {
             e.printStackTrace();
-            //throw new IOException(e);
         }finally {
             if(hdfs != null) {
                 try {
                     hdfs.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -97,11 +91,4 @@ public class HdfsFile {
         }
         fs.close();
     }
-	public static void main(String[] args) throws IOException{
-		String hdfs_in="/data/";
-		uploadFile("D:/pfp.txt","/data/pfp.cvs");
-		//createDirectoryInHDFS(hdfs_in);*/
-		//mkdirs("/data/");
-	}
-
 }

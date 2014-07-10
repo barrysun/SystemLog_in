@@ -21,7 +21,6 @@ public class OrderCsv {
 	 * @throws IOException
 	 */
 	public static void createOrderCsvJob() throws ClassNotFoundException, SQLException, IOException{
-		
 		List<HashMap<String,Object>> list=Db.ExecuteQuery("select product_id,change_by_user_login_id from order_item  ", null,DbConnection.getConn("ES") );
 		FileWriter fileWriter=new FileWriter(DivinerConstant.ORDERCSV_PATH);
 		FileWriter ufileWriter=new FileWriter(DivinerConstant.USERCSV_PATH);
@@ -45,7 +44,7 @@ public class OrderCsv {
 				  map.put(String.valueOf(ulist.get(i).get("change_by_user_login_id")).trim(), (i+1));
 			  }
 		  }
-		 ufileWriter.flush();
+		  ufileWriter.flush();
 		  ufileWriter.close();
 		for (int i = 0; i < list.size(); i++) {
 			if(list.get(i).get("change_by_user_login_id")!=null&&!list.get(i).get("change_by_user_login_id").toString().equals(""))
@@ -55,4 +54,28 @@ public class OrderCsv {
 		   fileWriter.close();
 	}
 	
+	
+	public static void createPFPCsv() throws ClassNotFoundException, SQLException, IOException{
+		List<HashMap<String,Object>> list=Db.ExecuteQuery("select product_id,change_by_user_login_id from order_item  order by change_by_user_login_id", null,DbConnection.getConn("ES") );
+		FileWriter fileWriter=new FileWriter(DivinerConstant.PFPCSV_PATH);
+		String key="";
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i).get("change_by_user_login_id")!=null
+					&&!list.get(i).get("change_by_user_login_id").toString().equals(""))
+			{
+				if(key.equals(list.get(i).get("change_by_user_login_id").toString().trim()))
+				 fileWriter.write(list.get(i).get("product_id").toString().trim()+" ");
+				else{
+					key=list.get(i).get("change_by_user_login_id").toString().trim();
+					fileWriter.write("\n"+list.get(i).get("product_id").toString().trim()+" ");
+				}
+			}
+		    }
+		   fileWriter.flush();
+		   fileWriter.close();
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException{
+		createPFPCsv();
+	}
 }

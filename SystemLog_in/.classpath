@@ -81,5 +81,7 @@
 	<classpathentry kind="lib" path="C:/Users/Barry/Desktop/jar/jar/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Barry/Desktop/jar/jar/xstream-1.4.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Barry/Desktop/jar/jar/zookeeper-3.4.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Barry/Desktop/jar/quartz-2.2.1-distribution/quartz-2.2.1/lib/quartz-2.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Barry/Desktop/jar/quartz-2.2.1-distribution/quartz-2.2.1/lib/quartz-jobs-2.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
