@@ -75,7 +75,5 @@ public class OrderCsv {
 		   fileWriter.close();
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException{
-		createPFPCsv();
-	}
+	
 }
