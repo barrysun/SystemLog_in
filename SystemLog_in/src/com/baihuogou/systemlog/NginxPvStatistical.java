@@ -35,7 +35,6 @@ public class NginxPvStatistical {
 		stringBuilder.append("<table  border=\"1px\" cellspacing=\"0px\"><tr><td>域名</td><td>点击产品的次数</td><td>访问域名</td></tr>");
 		   for (int i = 0; i < list.size(); i++) {
 			   String str=String.valueOf(list.get(i).get("request"));
-			   
 			   str=str.substring(str.indexOf(" ")+1);
 			   //如果字符串被截取
 			   str=str.indexOf(" ")==-1?str:str.substring(0,str.indexOf(" "));
@@ -61,7 +60,7 @@ public class NginxPvStatistical {
 		   Iterator<?> iter = orderlist.iterator();
 		 while (iter.hasNext()) {
 		   @SuppressWarnings("rawtypes")
-		Map.Entry entry = (Map.Entry) iter.next();
+		 Map.Entry entry = (Map.Entry) iter.next();
 		   Object key = entry.getKey();
 		   Object val = entry.getValue();
 		   stringBuilder.append("<tr><td>"+key+"</td><td>"+val+"</td><td></td></tr>");
@@ -84,7 +83,6 @@ public class NginxPvStatistical {
 	 * @throws SQLException
 	 */
 	public static String executeUVPVStatistical(String time) throws ClassNotFoundException, SQLException{
-		
 		String[] domainArray=getDomains();
 		String SQL_PV="select count(remote_addr) as pvcount from system_nginx_log_"+time+" %s";
 		String SQL_UV="select count(distinct(remote_addr)) as uvcount from system_nginx_log_"+time+" %s";

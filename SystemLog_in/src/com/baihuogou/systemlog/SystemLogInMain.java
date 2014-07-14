@@ -32,7 +32,6 @@ public class SystemLogInMain {
 		} catch (SchedulerException | ParseException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.baihuogou.systemlog.NginxPvStatistical;
+import com.baihuogou.systemlog.statistics.WebStatistics;
 import com.baihuogou.systemlog.utils.Db;
 import com.baihuogou.systemlog.utils.Log4jUtil;
 
@@ -17,6 +18,7 @@ public class SendEmail {
 			throws ClassNotFoundException, SQLException {
 		SendProductPV(FileName);
 		SendPvUvEmail(FileName);
+		SendPVEmail("ceshi");
 	}
 
 	public static void SendProductPV(String FileName) {
@@ -82,6 +84,33 @@ public class SendEmail {
 			}
 		}
 	}
+	
+	public static void SendPVEmail(String FileName)
+			throws ClassNotFoundException, SQLException {
+		// 这个类主要是设置邮件
+		String[] emailArray = emails("pvuv");
+		String emailContent = WebStatistics.AboutDomans("system_nginx_log_20140713");
+		if (emailArray != null) {
+			for (String email : emailArray) {
+				System.out.println(email);
+				MailSenderInfo mailInfo = new MailSenderInfo();
+				mailInfo.setMailServerHost("smtp.163.com");
+				mailInfo.setMailServerPort("25");
+				mailInfo.setValidate(true);
+				mailInfo.setUserName("15882346251@163.com");
+				mailInfo.setPassword("sunwubin");// 您的邮箱密码
+				mailInfo.setFromAddress("15882346251@163.com");
+				mailInfo.setContent(emailContent);
+				mailInfo.setSubject(FileName + " PV UV统计");
+				// sms.sendTextMail(mailInfo);//发送文体格式
+				// SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
+				// mailInfo.setSubject(FileName + " PV统计");
+				mailInfo.setToAddress(email);
+				// sms.sendTextMail(mailInfo);//发送文体格式
+				SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
+			}
+		}
+	}
 
 	/*
 	 * public static void main(String[] args){ sendEmail(); }
@@ -96,5 +125,9 @@ public class SendEmail {
 			emailArr = list.get(0).get("email_list").toString().split("\\|");
 		}
 		return emailArr;
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException{
+		SendPVEmail("ceshi");
 	}
 }
