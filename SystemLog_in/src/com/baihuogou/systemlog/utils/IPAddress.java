@@ -1,5 +1,6 @@
 package com.baihuogou.systemlog.utils;
 
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 public class IPAddress {
 
@@ -27,7 +31,7 @@ public class IPAddress {
 		String returnStr = this.getResult(urlStr, content, encodingString);
 		if (returnStr != null) {
 			// 处理返回的省市区信息
-			System.out.println(returnStr);
+		//	System.out.println(returnStr);
 			String[] temp = returnStr.split(",");
 			if (temp.length < 3) {
 				return "0";// 无效IP，局域网测试
@@ -71,9 +75,10 @@ public class IPAddress {
 					break;
 				}
 			}
-			System.out.println(country + "=" + area + "=" + region + "=" + city
-					+ "=" + county + "=" + isp);
-			return region;
+		/*	System.out.println(country + "=" + area + "=" + region + "=" + city
+					+ "=" + county + "=" + isp);*/
+			return country + area + region +  city
+					+  county +  isp;
 		}
 		return null;
 	}
@@ -213,4 +218,23 @@ public class IPAddress {
 		// 输出结果为：广东省,广州市,越秀区
 	}
 
+	/**
+	 * 如果数据库存在则从数据库中提取如果不存在调用API提取
+	 * @param ip
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	public static String getAddress(String ip) throws UnsupportedEncodingException, ClassNotFoundException, SQLException{
+		String address=null;
+		List<HashMap<String,Object>> list=Db.ExecuteQuery("select address from ip_address_map where ip=?", new Object[]{ip.trim()}, null);
+		if(list!=null&&list.size()>0){
+			address=list.get(0).get("address").toString().trim();
+		}else{
+			address=new IPAddress().getAddresses("ip=" + ip.trim(), "utf-8");
+			Db.executeUpdate("insert into ip_address_map(ip,address) values(?,?)", new Object[]{ip.trim(),address}, null);
+		}	
+		return address;
+	}
 }

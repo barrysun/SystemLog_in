@@ -19,7 +19,7 @@ public class NginxLogInsertJob implements Job {
 		try {
 			String LogFilePath;
 			System.out.println("nginx_job=" + FileUtil.loadFileName());
-			LogFilePath = Db.ExecuteQuery("", null, null).get(0).get("log_file_path").toString();
+			LogFilePath = Db.ExecuteQuery("select param_value from m_parameter where param_name='log_file_path'", null, null).get(0).get("param_value").toString();
 			NginxLogJob.nginx_job(LogFilePath, FileUtil.loadFileName());
 			//更新数据库时间
 			FileUtil.UpdateFileName();

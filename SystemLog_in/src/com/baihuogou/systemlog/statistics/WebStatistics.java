@@ -1,10 +1,15 @@
 package com.baihuogou.systemlog.statistics;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import com.baihuogou.systemlog.utils.Db;
+import com.baihuogou.systemlog.utils.IPAddress;
 
 public class WebStatistics {
 	
@@ -46,7 +51,6 @@ F:来源分析：
 移动端店铺分析：
 1.重要需求都同PC端的需求一致.
 2.需要着重了解的每天V和M店下面产生的订单数据+注册的店铺数据（包括汇总+详细数据）.
-	
 	 */
 	
 	/**
@@ -95,53 +99,78 @@ F:来源分析：
 	 * @return
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static List<OrderProduct> productTopX() throws ClassNotFoundException, SQLException{
-		String sql="select  split_part(split_part(request,'/',3),'.',1) as p_id,remote_addr from system_nginx_log_20140713  where request like '% /product/%' and remote_addr not in('%61.139.124.218%') and remote_addr not like '127.0.0.1%'   order by p_id";
+	public static List<OrderProduct> productTopX(String table) throws ClassNotFoundException, SQLException, UnsupportedEncodingException{
+		String sql="select mytable.p_id,mytable.remote_addr from (select  split_part(split_part(request,'/',3),'.',1) as p_id,remote_addr,request from "+table+"  where request like '% /product/%' and request not like ('%.jpeg%') and request not like ('%.JPG%') and request not like ('%.jpg%') and remote_addr not in('%61.139.124.218%')  and remote_addr not like '127.0.0.1%'  )  mytable where mytable.p_id not like '%HTTP%'  order by mytable.p_id";
 		List<HashMap<String,Object>> list=Db.ExecuteQuery(sql, null, null);
+		List<OrderProduct> ps=new ArrayList<OrderProduct>();
+		String ipStr="";
+		Integer num=0;
+		List<String> address=null;
 		for(int i=0;i<list.size();i++){
-			System.out.println(list.get(i).get("p_id")+"|"+list.get(i).get("remote_addr"));
+			if(list.get(i).get("p_id")==null||list.get(i).get("p_id").toString().trim().equals("")){
+				continue;
+			}
+				if(ipStr.equals(list.get(i).get("p_id").toString().trim())){
+					address.add(list.get(i).get("remote_addr")+"("+IPAddress.getAddress(list.get(i).get("remote_addr").toString().trim())+")");
+					num++;
+				}else{
+					if(num>0&&!(ipStr.equals(""))){
+						ps.add(new OrderProduct(ipStr,num,address));
+					}
+					ipStr=list.get(i).get("p_id").toString().trim();
+					address=new ArrayList<String>();
+					num=0;
+				}		
 		}
-		return null;
+		  class ComparatorOrderProduct implements Comparator{
+			@Override
+			public int compare(Object o1, Object o2) {
+				return ((OrderProduct)o2).getNumber().compareTo(((OrderProduct)o1).getNumber());
+			}	
+		}
+		ComparatorOrderProduct comparator=new ComparatorOrderProduct();
+		Collections.sort(ps,comparator);
+		return ps;
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException{
+	/**
+	 *  统计每天的排行榜
+	 * @param TopX
+	 * @param table
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws UnsupportedEncodingException
+	 * @throws SQLException
+	 */
+	public static String productTopXMessage(int TopX,String table) throws ClassNotFoundException, UnsupportedEncodingException, SQLException{
+		String tr_str="<tr><td style=\"border:solid 1px #666666; padding:8px;\">%s</td><td style=\"border:solid 1px #666666; padding:8px;\">%s</td><td style=\"border:solid 1px #666666; padding:8px;\">%s</td></tr>";
+		StringBuilder stringBuilder=new StringBuilder();
+		stringBuilder.append("<table    border=\"1px\" cellspacing=\"0px\" style=\"border:solid 1px #666666; border-collapse:collapse;text-align:center;\"><tr><th style=\"border:solid 1px #666666;padding:8px;background:#dedede; \">产品编号</th><th style=\"border:solid 1px #666666;padding:8px;background:#dedede; \">IP访问量</th><th style=\"border:solid 1px #666666;padding:8px;background:#dedede; \">IP位置</th></tr>");
+		List<OrderProduct> list=productTopX(table);
+		for(OrderProduct p:list){
+			if(TopX<=0) break;
+		//	System.out.println(p.getNumber()+"|"+p.getProductId()+"|"+p.toAddressString());
+			stringBuilder.append(String.format(tr_str,p.getProductId(), p.getNumber(),p.toAddressString()));
+			TopX--;
+		}
+		stringBuilder.append("</table>");
+		return stringBuilder.toString();
+	}
+	
+	
+	
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, UnsupportedEncodingException{
 		//System.out.println(AboutDomans("system_nginx_log_20140713"));
-		productTopX();
 	}
 	
 	
-	public class OrderProduct{
-		private String ProductId;
-		private Integer Number;
-		private List<String> IpAddress;
-		public String toString(){
-			return null;
-		}
+	
 
-		public String getProductId() {
-			return ProductId;
-		}
-
-		public void setProductId(String productId) {
-			ProductId = productId;
-		}
-
-		public List<String> getIpAddress() {
-			return IpAddress;
-		}
-
-		public void setIpAddress(List<String> ipAddress) {
-			IpAddress = ipAddress;
-		}
-
-		public Integer getNumber() {
-			return Number;
-		}
-
-		public void setNumber(Integer number) {
-			Number = number;
-		}
-	}
+	
+	
+	
 
 }

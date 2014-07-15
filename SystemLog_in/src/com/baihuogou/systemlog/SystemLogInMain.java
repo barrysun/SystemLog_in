@@ -23,11 +23,11 @@ public class SystemLogInMain {
 			SchedulerFactory sf = new StdSchedulerFactory();
 			Scheduler sched = sf.getScheduler();
 			JobDetail job = new JobDetailImpl("NginxLog","Diviner",NginxLogInsertJob.class);
-			JobDetail job2 = new JobDetailImpl("DivinerJob","Diviner",DivinerJob.class);
+			//JobDetail job2 = new JobDetailImpl("DivinerJob","Diviner",DivinerJob.class);
 			CronTrigger trigger = new CronTriggerImpl("NginxLog","Diviner","0 0 3 * * ?");
-			CronTrigger trigger2 = new CronTriggerImpl("DivinerJob","Diviner","0 30 8 * * ?");
+			//CronTrigger trigger2 = new CronTriggerImpl("DivinerJob","Diviner","0 30 8 * * ?");
 			sched.scheduleJob(job, trigger);
-			sched.scheduleJob(job2,trigger2);
+			//sched.scheduleJob(job2,trigger2);
 			sched.start();
 		} catch (SchedulerException | ParseException e) {
 			e.printStackTrace();

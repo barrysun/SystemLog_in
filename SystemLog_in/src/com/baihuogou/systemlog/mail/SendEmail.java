@@ -1,6 +1,7 @@
 package com.baihuogou.systemlog.mail;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,10 @@ import com.baihuogou.systemlog.utils.Log4jUtil;
 public class SendEmail {
 	private static Logger logger = Log4jUtil.getLogger(SendEmail.class);
 	public static void sendEmail(String FileName)
-			throws ClassNotFoundException, SQLException {
+			throws ClassNotFoundException, SQLException, UnsupportedEncodingException {
 		SendProductPV(FileName);
 		SendPvUvEmail(FileName);
-		SendPVEmail("ceshi");
+		SendPVEmail("20140715 统计");
 	}
 
 	public static void SendProductPV(String FileName) {
@@ -86,10 +87,10 @@ public class SendEmail {
 	}
 	
 	public static void SendPVEmail(String FileName)
-			throws ClassNotFoundException, SQLException {
+			throws ClassNotFoundException, SQLException, UnsupportedEncodingException {
 		// 这个类主要是设置邮件
 		String[] emailArray = emails("pvuv");
-		String emailContent = WebStatistics.AboutDomans("system_nginx_log_20140713");
+		String emailContent = WebStatistics.productTopXMessage(50,"system_nginx_log_20140714");
 		if (emailArray != null) {
 			for (String email : emailArray) {
 				System.out.println(email);
@@ -101,7 +102,7 @@ public class SendEmail {
 				mailInfo.setPassword("sunwubin");// 您的邮箱密码
 				mailInfo.setFromAddress("15882346251@163.com");
 				mailInfo.setContent(emailContent);
-				mailInfo.setSubject(FileName + " PV UV统计");
+				mailInfo.setSubject(FileName + "Top50排行 统计");
 				// sms.sendTextMail(mailInfo);//发送文体格式
 				// SimpleMailSender.sendHtmlMail(mailInfo);// 发送html格式
 				// mailInfo.setSubject(FileName + " PV统计");
@@ -112,9 +113,6 @@ public class SendEmail {
 		}
 	}
 
-	/*
-	 * public static void main(String[] args){ sendEmail(); }
-	 */
 	public static String[] emails(String theme) throws ClassNotFoundException,
 			SQLException {
 		String sql = "select email_list,email_title from push where theme=?";
@@ -127,7 +125,7 @@ public class SendEmail {
 		return emailArr;
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException{
-		SendPVEmail("ceshi");
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, UnsupportedEncodingException{
+		SendPVEmail("20140714 商品IP访问量 ");
 	}
 }
