@@ -55,22 +55,6 @@ public class Db {
 		 DDL_NGINX_LOG.append("	 host  varchar(200) , ");
 		 DDL_NGINX_LOG.append("	 time_time timestamp ");
 		 DDL_NGINX_LOG.append(");");
-		
-	/*	DDL_NGINX_LOG.append("CREATE TABLE `system_nginx_log_%s` (");
-		DDL_NGINX_LOG.append("`id`  int(11) NOT NULL AUTO_INCREMENT ,");
-		DDL_NGINX_LOG.append("`old_str`  varchar(5000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`remote_addr`  varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`remote_user`  varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`time_local`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`request`  varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`status`  varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`body_bytes_set`  varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`http_referer`  varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`http_user_agent`  varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`http_x_forwarded_for`  varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("`host`  varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,");
-		DDL_NGINX_LOG.append("PRIMARY KEY (`id`)");
-		DDL_NGINX_LOG.append(")");*/
 		DDL_NGINX_LOG_CREATE_SQL=DDL_NGINX_LOG.toString();
 	}
 	

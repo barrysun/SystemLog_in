@@ -32,7 +32,7 @@ public class NginxPvStatistical {
 		//FileWriter fileWriter=new FileWriter("D:\\log20140618.txt");
 		Map<String,Integer> domainCount=new HashMap<String,Integer>();
 		StringBuilder stringBuilder=new StringBuilder();
-		stringBuilder.append("<table  border=\"1px\" cellspacing=\"0px\"><tr><td>域名</td><td>点击产品的次数</td><td>访问域名</td></tr>");
+		stringBuilder.append("<table  border=\"1px\" cellspacing=\"0px\" style=\"border:solid 1px #666666; border-collapse:collapse;text-align:center;\"><tr><th style=\"border:solid 1px #666666;padding:8px;background:#dedede; \">域名</th><th style=\"border:solid 1px #666666;padding:8px;background:#dedede; \">访问次数</th></tr>");
 		   for (int i = 0; i < list.size(); i++) {
 			   String str=String.valueOf(list.get(i).get("request"));
 			   str=str.substring(str.indexOf(" ")+1);
@@ -63,7 +63,7 @@ public class NginxPvStatistical {
 		 Map.Entry entry = (Map.Entry) iter.next();
 		   Object key = entry.getKey();
 		   Object val = entry.getValue();
-		   stringBuilder.append("<tr><td>"+key+"</td><td>"+val+"</td><td></td></tr>");
+		   stringBuilder.append("<tr><td style=\"border:solid 1px #666666; padding:8px;\">"+key+"</td><td style=\"border:solid 1px #666666; padding:8px;\">"+val+"</td></tr>");
 		  }
 		   stringBuilder.append("</table>");
 //		   fileWriter.flush();

@@ -11,7 +11,6 @@ import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 
-import com.baihuogou.systemlog.job.DivinerJob;
 import com.baihuogou.systemlog.job.NginxLogInsertJob;
 
 public class SystemLogInMain {
@@ -23,15 +22,22 @@ public class SystemLogInMain {
 			SchedulerFactory sf = new StdSchedulerFactory();
 			Scheduler sched = sf.getScheduler();
 			JobDetail job = new JobDetailImpl("NginxLog","Diviner",NginxLogInsertJob.class);
-			//JobDetail job2 = new JobDetailImpl("DivinerJob","Diviner",DivinerJob.class);
 			CronTrigger trigger = new CronTriggerImpl("NginxLog","Diviner","0 0 3 * * ?");
-			//CronTrigger trigger2 = new CronTriggerImpl("DivinerJob","Diviner","0 30 8 * * ?");
 			sched.scheduleJob(job, trigger);
-			//sched.scheduleJob(job2,trigger2);
 			sched.start();
 		} catch (SchedulerException | ParseException e) {
 			e.printStackTrace();
 		}
+		/*try {
+			String LogFilePath;
+			System.out.println("nginx_job=" + FileUtil.loadFileName());
+			LogFilePath = Db.ExecuteQuery("select param_value from m_parameter where param_name='log_file_path'", null, null).get(0).get("param_value").toString();
+			NginxLogJob.nginx_job(LogFilePath, FileUtil.loadFileName());
+			//更新数据库时间
+			FileUtil.UpdateFileName();
+		} catch (ClassNotFoundException | SQLException | ParseException | IOException | InterruptedException e) {
+			e.printStackTrace();
+		} */
 	}
 	
 }
